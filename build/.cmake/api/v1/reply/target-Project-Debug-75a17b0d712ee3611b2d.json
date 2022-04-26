@@ -61,14 +61,14 @@
 					"fragment" : "-g"
 				},
 				{
-					"fragment" : "-std=gnu++1z"
+					"fragment" : "-std=gnu++2a"
 				}
 			],
 			"includes" : 
 			[
 				{
 					"backtrace" : 3,
-					"path" : "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/SFML/self4/headers"
+					"path" : "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/headers"
 				},
 				{
 					"backtrace" : 3,
