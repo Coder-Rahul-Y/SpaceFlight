@@ -270,12 +270,13 @@ Game()
         // audio
         mus.openFromFile("assets/bg.wav");
         mus.setLoop(true);
+        mus.setLoopPoints();
         // mus.setLoopPoints(0.f, mus.getDuration()));
         mus.play();
 
         bufDanger.loadFromFile("assets/bang.wav");
         bufNormal.loadFromFile("assets/point.wav");
-        bufPower.loadFromFile("assets/boost.wav");
+        bufPower.loadFromFile("assets/boost.flac");
         bufHealth.loadFromFile("assets/power.wav");
         bufEndgame.loadFromFile("assets/health flash.wav");
         bufLvlUp.loadFromFile("assets/bang.wav");
