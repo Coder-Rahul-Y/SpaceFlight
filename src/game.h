@@ -271,8 +271,8 @@ Game()
         // audio
         mus.openFromFile("assets/bg.wav");
         mus.setLoop(true);
-        musSpn.offset = sf::seconds(10.f); 
-        musSpn.length = sf::seconds(25.f); 
+        musSpn.offset = sf::seconds(7.f); 
+        musSpn.length = sf::seconds(140.f); 
         mus.setLoopPoints(musSpn);
         // mus.setPlayingOffset(sf::seconds(140.f));
         mus.play();
