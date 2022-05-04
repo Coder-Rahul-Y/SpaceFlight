@@ -1,5 +1,5 @@
 CMakeFiles/Project.dir/src/main.cpp.obj: \
- C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\SFML\self4\src\main.cpp \
+ C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self\ practise\SpaceFlight\src\main.cpp \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/iostream \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
@@ -129,7 +129,7 @@ CMakeFiles/Project.dir/src/main.cpp.obj: \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/bits/ostream.tcc \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/istream \
  C:/mingw64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/bits/istream.tcc \
- C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\SFML\self4\src\game.h \
+ C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self\ practise\SpaceFlight\src\game.h \
  c:/SFML/include/SFML/Graphics.hpp c:/SFML/include/SFML/Window.hpp \
  c:/SFML/include/SFML/System.hpp c:/SFML/include/SFML/Config.hpp \
  c:/SFML/include/SFML/System/Clock.hpp \
