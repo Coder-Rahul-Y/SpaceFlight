@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/SFML/self4
+# Install script for directory: C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/SFML/self4/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

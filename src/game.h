@@ -116,6 +116,7 @@ private:
 
     // audio
     sf::Music mus;
+    sf::Music::Span<sf::Time> musSpn;
     sf::SoundBuffer bufNormal, bufDanger, bufPower, bufHealth, bufEndgame, bufLvlUp;
     sf::Sound sndNormal, sndDanger, sndPower, sndHealth, sndEndgame, sndLvlUp;
 
@@ -270,12 +271,15 @@ Game()
         // audio
         mus.openFromFile("assets/bg.wav");
         mus.setLoop(true);
-        // mus.setLoopPoints(0.f, mus.getDuration()));
+        musSpn.offset = sf::seconds(8.f); 
+        musSpn.length = sf::seconds(140.f); 
+        mus.setLoopPoints(musSpn);
+        mus.setPlayingOffset(sf::seconds(8.f));
         mus.play();
 
         bufDanger.loadFromFile("assets/bang.wav");
         bufNormal.loadFromFile("assets/point.wav");
-        bufPower.loadFromFile("assets/boost.wav");
+        bufPower.loadFromFile("assets/boost.flac");
         bufHealth.loadFromFile("assets/power.wav");
         bufEndgame.loadFromFile("assets/health flash.wav");
         bufLvlUp.loadFromFile("assets/bang.wav");

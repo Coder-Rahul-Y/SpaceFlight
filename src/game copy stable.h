@@ -1,11 +1,13 @@
 #ifndef Gme_H
 #define Gme_h
 
-//add sprites
-//learn to add multiplayer
-//add instant win in multiplayer top level
+// add end sprite
+// add restart button
+// learn to add multiplayer
+// add instant win in multiplayer top level
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <fstream>
 #include <windows.h>
@@ -27,16 +29,6 @@ public:
     void setScore(int a)
     {
         score = a;
-    }
-
-    char *getName()
-    {
-        return name;
-    }
-
-    int getScore()
-    {
-        return score;
     }
 
 } hs, hs1;
@@ -64,15 +56,15 @@ struct obstacle
     sf::Vector2f size;
     float speed = 0.f;
     int type;
-    sf::Color color;
-    sf::Texture *tex = NULL;
     int points = 0;
     int health = 0;
+
+    sf::Sprite *spr = NULL;
 };
 
 class Level
 {
-    //use level.type[level][probabilityNum] OR level.type[level][speedNum]
+    // use level.type[level][probabilityNum] OR level.type[level][speedNum]
 public:
     int normal[4][2] = {{60, 3}, {60, 3}, {60, 3}, {60, 3}};
     int repair[4][2] = {{4, 7}, {4, 7}, {4, 7}, {4, 7}};
@@ -84,104 +76,86 @@ public:
 class Game
 {
 private:
-    bool running = true, leftPressed = false, healthFlash = false, invincible = false, firstInitLevel = false;
+    bool running = true, healthFlash = false, invincible = false, firstInitLevel = false, gravity = true;
     sf::RenderWindow *window;
     int windowHeight = 600, windowWidth = 800;
     sf::Event ev;
-    sf::RectangleShape obstacleRect, healthRect, lvlPointsRect;
+    sf::RectangleShape healthRect, lvlPointsRect;
     sf::Vector2f ShipSize;
+
     float pointsRectY = windowHeight, healthRectApproachY = -1.f, healthRectY = 0.f;
 
-    //sprites and textures
+    // sprites and textures
     sf::Texture shiptexture, dangertexture, normaltexture, sdangertexture, powertexture, repairtexture;
-    sf::Sprite sship, normalSprite, dangerSprite, sdangerSprite, powerSprite, repairSprite;
+    sf::Texture bgTexture1, shiptexture1, dangertexture1, normaltexture1, sdangertexture1, repairtexture1;
+    sf::Sprite sBg, sship, normalSprite, dangerSprite, sdangerSprite, powerSprite, repairSprite;
+    sf::Texture levelUpTex;
+    sf::Sprite levelUpSprite;
 
     int obsNo = 0;
     obstacle obstacles[10];
 
     Level lvl;
     int level = 1;
-    int lvlSpeed = 0;
+    int lvlSpeed = 0, invinciSpeed = 10;
     int points = 0, health = 15, maxHealth = 15, pointsAtLevelup = 0, pointsForLevelUp = 1000;
 
-    float spawnTime = 12.f, timer = 0.f, KeyTimer = 0.f, flashTimer = 0.f, invinciTimer = 0.f;
+    float spawnTime = 12.f, timer = 0.f, flashTimer = 0.f, invinciTimer = 0.f;
 
     float dir = 0.f;
-    // int loops = 0, firstpress = 0;
 
-    //text
+    // text
     sf::Font font;
     sf::Text uiText;
 
-    //probibility
+    // probibility--speed
     int pNormal, pRepair, pDanger, pPower, pSuperDanger,
         sNormal, sRepair, sDanger, sPower, sSuperDanger;
 
     int all;
 
-    //functions
+    // audio
+    sf::Music mus;
+    sf::Music::Span<sf::Time> musSpn;
+    sf::SoundBuffer bufNormal, bufDanger, bufPower, bufHealth, bufEndgame, bufLvlUp;
+    sf::Sound sndNormal, sndDanger, sndPower, sndHealth, sndEndgame, sndLvlUp;
+
+    // functions
+    void initObsFunc(int num, int type, int speed, float sizex, float sizey, int points, int health, sf::Sprite *sprite)
+    {
+        obstacles[num].type = type;
+        obstacles[num].speed = speed;
+        obstacles[num].size = sf::Vector2f(sizex, sizey);
+        obstacles[num].points = points;
+        obstacles[num].health = health;
+        obstacles[num].spr = sprite;
+    }
+
     void initObstacle(int num)
     {
 
         points++;
         int probability = rand() % all;
 
-        //Normal
+        // Normal
         if (probability < pNormal)
-        {
-            obstacles[num].type = normal;
-            obstacles[num].speed = sNormal;
-            obstacles[num].color = sf::Color::Blue;
-            obstacles[num].tex = &normaltexture;
-            obstacles[num].size = sf::Vector2f(40.f, 40.f);
-            obstacles[num].points = 10;
-            obstacles[num].health = 0;
-        }
+            initObsFunc(num, normal, sNormal, 40.f, 40.f, 10, 0, &normalSprite);
 
-        //Repair
+        // Repair
         else if (probability < pNormal + pRepair)
-        {
-            obstacles[num].type = repair;
-            obstacles[num].speed = sRepair;
-            obstacles[num].color = sf::Color::Yellow;
-            obstacles[num].tex = &repairtexture;
-            obstacles[num].size = sf::Vector2f(20.f, 20.f);
-            obstacles[num].points = 50;
-            obstacles[num].health = +5;
-        }
-        //Danger
+            initObsFunc(num, repair, sRepair, 20.f, 20.f, 10, +5, &repairSprite);
+
+        // Danger
         else if (probability < pNormal + pRepair + pDanger)
-        {
-            obstacles[num].type = danger;
-            obstacles[num].speed = sDanger;
-            obstacles[num].color = sf::Color::Red;
-            obstacles[num].tex = &dangertexture;
-            obstacles[num].size = sf::Vector2f(30.f, 30.f);
-            obstacles[num].points = 0;
-            obstacles[num].health = -1;
-        }
-        //Power
+            initObsFunc(num, danger, sDanger, 30.f, 30.f, 0, -1, &dangerSprite);
+
+        // Power
         else if (probability < pNormal + pRepair + pDanger + pPower)
-        {
-            obstacles[num].type = power;
-            obstacles[num].speed = sPower;
-            obstacles[num].color = sf::Color::Green;
-            obstacles[num].tex = &powertexture;
-            obstacles[num].size = sf::Vector2f(25.f, 25.f);
-            obstacles[num].points = 100;
-            obstacles[num].health = 0;
-        }
-        //super danger
+            initObsFunc(num, power, sPower, 25.f, 25.f, 0, 0, &powerSprite);
+
+        // super danger
         else if (probability < pNormal + pRepair + pDanger + pPower + pSuperDanger)
-        {
-            obstacles[num].type = superDanger;
-            obstacles[num].speed = sSuperDanger;
-            obstacles[num].color = sf::Color::Red;
-            obstacles[num].tex = &sdangertexture;
-            obstacles[num].size = sf::Vector2f(50.f, 50.f);
-            obstacles[num].points = 0;
-            obstacles[num].health = -4;
-        }
+            initObsFunc(num, superDanger, sSuperDanger, 50.f, 50.f, 0, -4, &sdangerSprite);
 
         obstacles[num].pos.x = rand() % int(windowWidth - obstacles[num].size.x);
         obstacles[num].pos.y = -obstacles[num].size.y;
@@ -191,6 +165,8 @@ private:
     {
         int level = x - 1;
         lvlSpeed = level * 2;
+
+        // std::cout<<"\n techLevel = "<<level<<std::endl;
 
         sNormal = lvl.normal[level][speedNum] + lvlSpeed,
         sRepair = lvl.repair[level][speedNum] + lvlSpeed,
@@ -206,7 +182,7 @@ private:
 
         all = pNormal + pRepair + pDanger + pPower + pSuperDanger;
 
-        //change speed of all objects after level change
+        // change speed of all objects after level change
         if (firstInitLevel == true)
         {
             for (int i = 0; i < 10; i++)
@@ -236,7 +212,7 @@ private:
     }
 
 public:
-    Game()
+Game()
     {
         window = new sf::RenderWindow(sf::VideoMode(windowWidth + 20 + 10, windowHeight), "window", sf::Style::Titlebar | sf::Style::Close);
         window->setFramerateLimit(80);
@@ -244,12 +220,7 @@ public:
         ShipSize.x = 50.f;
         ShipSize.y = 50.f;
 
-        // sship.setSize(ShipSize);
         sship.setPosition(ShipSize.x * 8, ShipSize.y * 11);
-        // sship.setFillColor(sf::Color::White);
-
-        obstacleRect.setSize(sf::Vector2f(30.f, 30.f));
-        obstacleRect.setFillColor(sf::Color::Black);
 
         healthRect.setSize(sf::Vector2f(20.f, windowHeight));
         healthRect.setPosition(windowWidth, 0.f);
@@ -259,20 +230,32 @@ public:
         lvlPointsRect.setPosition(windowWidth + 20, pointsRectY);
         lvlPointsRect.setFillColor(sf::Color::White);
 
+        bgTexture1.loadFromFile("assets/background.png");
         shiptexture.loadFromFile("assets/ship.png");
-        sship.setTexture(shiptexture);
         normaltexture.loadFromFile("assets/normal.png");
-        normalSprite.setTexture(normaltexture);
         dangertexture.loadFromFile("assets/danger.png");
-        dangerSprite.setTexture(dangertexture);
         sdangertexture.loadFromFile("assets/sdanger.png");
-        sdangerSprite.setTexture(sdangertexture);
         powertexture.loadFromFile("assets/power.png");
-        powerSprite.setTexture(powertexture);
         repairtexture.loadFromFile("assets/health.png");
-        repairSprite.setTexture(repairtexture);
+        levelUpTex.loadFromFile("assets/levelUp.png");
 
-        //text
+        shiptexture1.loadFromFile("assets/ship1.png");
+        normaltexture1.loadFromFile("assets/normal1.png");
+        dangertexture1.loadFromFile("assets/danger1.png");
+        sdangertexture1.loadFromFile("assets/sdanger1.png");
+        repairtexture1.loadFromFile("assets/health1.png");
+
+        // sBg.setTexture();
+        sship.setTexture(shiptexture);
+        normalSprite.setTexture(normaltexture);
+        dangerSprite.setTexture(dangertexture);
+        sdangerSprite.setTexture(sdangertexture);
+        powerSprite.setTexture(powertexture);
+        repairSprite.setTexture(repairtexture);
+        levelUpSprite.setTexture(levelUpTex);
+        sBg.setTexture(bgTexture1);
+
+        // text
         if (!this->font.loadFromFile("assets/fonts/SIXTY.TTF"))
         {
             std::cout << " ERROR ::Game.cpp::initFonts::failed to load font file" << std::endl;
@@ -282,370 +265,409 @@ public:
         this->uiText.setFillColor(sf::Color::White);
         this->uiText.setString("none");
 
-        //level
+        // level
         initLevel(level);
+
+        // audio
+        mus.openFromFile("assets/bg.wav");
+        mus.setLoop(true);
+        musSpn.offset = sf::seconds(8.f); 
+        musSpn.length = sf::seconds(140.f); 
+        mus.setLoopPoints(musSpn);
+        mus.setPlayingOffset(sf::seconds(8.f));
+        mus.play();
+
+        bufDanger.loadFromFile("assets/bang.wav");
+        bufNormal.loadFromFile("assets/point.wav");
+        bufPower.loadFromFile("assets/boost.flac");
+        bufHealth.loadFromFile("assets/power.wav");
+        bufEndgame.loadFromFile("assets/health flash.wav");
+        bufLvlUp.loadFromFile("assets/bang.wav");
+
+        sndNormal.setBuffer(bufNormal);
+        sndDanger.setBuffer(bufDanger);
+        sndPower.setBuffer(bufPower);
+        sndHealth.setBuffer(bufHealth);
+        sndEndgame.setBuffer(bufEndgame);
+        sndLvlUp.setBuffer(bufNormal);
     }
 
-    bool isRunning()
-    {
-        return running;
-    }
+bool isRunning()
+{
+    return running;
+}
 
-    int getPoints()
-    {
-        return points;
-    }
+int getPoints()
+{
+    return points;
+}
 
-    void input()
+void devInput(sf::Keyboard::Key)
+{
+
+    switch (ev.key.code)
     {
-        while (window->pollEvent(ev))
+    case sf::Keyboard::N:
+        pNormal++;
+        break;
+    case sf::Keyboard::R:
+        pRepair++;
+        break;
+    case sf::Keyboard::D:
+        pDanger++;
+        break;
+    case sf::Keyboard::S:
+        pSuperDanger++;
+        break;
+    case sf::Keyboard::P:
+        pPower++;
+        break;
+    case sf::Keyboard::Comma:
+        pNormal--;
+        pRepair--;
+        pDanger--;
+        pSuperDanger--;
+        pPower--;
+        break;
+
+    case sf::Keyboard::G:
+        if (gravity == true) gravity = false;
+        else gravity = true;
+        dir=0.f;
+        break;
+
+    case sf::Keyboard::I:
+        std::cout
+            << "\n\n\nnormal : " << pNormal
+            << "\nrepair : " << pRepair
+            << "\ndanger : " << pDanger
+            << "\nsuper danger : " << pSuperDanger
+            << "\npower : " << pPower
+            << "\nall : " << all
+            << "\n\n\n(pointsForLevelUp*level) : " << (pointsForLevelUp * level)
+            << "\n(points - pointsAtLevelup) : " << (points - pointsAtLevelup) << std::endl;
+        break;
+    }
+    all = pNormal + pRepair + pDanger + pPower + pSuperDanger;
+}
+
+void input()
+{
+    while (window->pollEvent(ev))
+    {
+        switch (ev.type)
         {
-            switch (ev.type)
-            {
-            case sf::Event::Closed:
-                window->close();
-                running = false;
-                break;
+        case sf::Event::Closed:
+            window->close();
+            running = false;
+            break;
 
-                //Controlling without spacebar:
-                // case sf::Event::KeyPressed:
-                //     // std::cout<<"keyress"<<std::endl;
-                //     if (ev.key.code == sf::Keyboard::Escape)
-                //     {
-                //         window->close();
-                //         running = false;
-                //     }
-                //         else if (ev.key.code == sf::Keyboard::Left)
-                //         {
-                // //            firstpress++;
-
-                //             if (leftPressed == false || KeyTimer>40.f)
-                //             {
-                //                 dir =-5.f;
-                //             }else dir =0.f;
-                //                 KeyTimer = 0;
-
-                //             sship.move(-10.f, 0.f);
-                //             leftPressed = true;
-                //         }
-                //         else if (ev.key.code == sf::Keyboard::Right)
-                //         {
-                //             if (leftPressed==true || KeyTimer>40.f)
-                //             {
-                //                 dir =5.f;
-                //             }else dir =0.f;
-
-                //                 KeyTimer = 0;
-
-                //             sship.move(+10.f, 0.f);
-                //             leftPressed = false;
-                //         }
-
-                //controling with spacebar
-            case sf::Event::KeyPressed:
-                // std::cout<<"keyress"<<std::endl;
-                if (ev.key.code == sf::Keyboard::Escape)
-                {
-                    window->close();
-                    running = false;
-                }
-                else if (ev.key.code == sf::Keyboard::Left)
-                {
-                    // firstpress++;
-                    dir = -5.f;
-                }
-                else if (ev.key.code == sf::Keyboard::Right)
-                {
-                    dir = 5.f;
-                }
-                else if (ev.key.code == sf::Keyboard::Space)
-                {
-                    dir = 0.f;
-                }
-                else
-                {
-                    switch (ev.key.code)
-                    {
-                    case sf::Keyboard::N:
-                        pNormal++;
-                        break;
-                    case sf::Keyboard::R:
-                        pRepair++;
-                        break;
-                    case sf::Keyboard::D:
-                        pDanger++;
-                        break;
-                    case sf::Keyboard::S:
-                        pSuperDanger++;
-                        break;
-                    case sf::Keyboard::P:
-                        pPower++;
-                        break;
-                    case sf::Keyboard::Comma:
-                        pNormal--;
-                        pRepair--;
-                        pDanger--;
-                        pSuperDanger--;
-                        pPower--;
-                        break;
-                    case sf::Keyboard::I:
-                        std::cout
-                            << "\n\n\nnormal : " << pNormal
-                            << "\nrepair : " << pRepair
-                            << "\ndanger : " << pDanger
-                            << "\nsuper danger : " << pSuperDanger
-                            << "\npower : " << pPower
-                            << "\nall : " << all
-                            << "\n\n\n(pointsForLevelUp*level) : " << (pointsForLevelUp * level)
-                            << "\n(points - pointsAtLevelup) : " << (points - pointsAtLevelup) << std::endl;
-                        break;
-                    }
-                    all = pNormal + pRepair + pDanger + pPower + pSuperDanger;
-                }
-
-                break;
-
-            default:
-                break;
-            }
+            // controling with spacebar
+        case sf::Event::KeyPressed:
+            devInput(ev.key.code);
         }
     }
 
-    void update()
+        // std::cout<<"keyress"<<std::endl;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
     {
+        window->close();
+        running = false;
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+        // firstpress++;
+        if(!gravity) dir = -5.f;
+        else sship.move(-5.f, 0.f);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        if (!gravity) dir = 5.f;
+        else sship.move(5.f, 0.f);
+    }
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    {
+        dir = 0.f;
+    }
+}
 
-        //first rain of ememies only
-        if (timer >= spawnTime && obsNo < 10)
+void updateHealth(int i)
+{
+    if (obstacles[i].health == 0 || invincible == true)
+        return;
+
+    health += obstacles[i].health;
+    if (obstacles[i].health < 0)
+        sndDanger.play();
+    else
+        sndHealth.play();
+
+    // end health flash and reset color and points
+    if (healthFlash == true && health > 4)
+    {
+        healthFlash = false;
+        healthRect.setFillColor(sf::Color::Red);
+        pointsRectY = windowHeight;
+        if (points >= pointsForLevelUp / 2)
+        {
+            pointsAtLevelup = points - pointsForLevelUp / 2;
+        }
+    }
+    else if (health < 5)
+    {
+        // decrease level when hit badly;
+        if (level > 1)
+        {
+            level = 1;
+            lvlPointsRect.setFillColor(sf::Color::White);
+            pointsAtLevelup = points - 80;
+            initLevel(level);
+        }
+
+        // Blink health bar when hit badly
+        healthFlash = true;
+
+        // endgame when health 0
+        if (health < 1)
+            endgame();
+    }
+    // health limit
+    else if (health > maxHealth)
+        health = maxHealth;
+
+    // update health bar expected position
+    healthRectY = windowHeight - (health * windowHeight / maxHealth);
+}
+
+void upadateCollision(int i)
+{
+    obstacles[i].pos.x = -100.f;
+
+    if (invincible == true)
+    {
+        points += 20;
+        sndNormal.play();
+    }
+    else
+    {
+        points += (obstacles[i].points * level); // gain more points at higher levels
+        sndNormal.play();
+    }
+
+    // powerUp when touch power object
+
+    if (obstacles[i].type == power)
+    {
+        sndPower.play();
+        invincible = true;
+        invinciTimer = 0.f;
+        spawnTime = 0.f;
+
+        sship.setTexture(shiptexture1);
+        normalSprite.setTexture(normaltexture1);
+        dangerSprite.setTexture(dangertexture1);
+        sdangerSprite.setTexture(sdangertexture1);
+        repairSprite.setTexture(repairtexture1);
+    }
+    if (invincible == true && invinciTimer >= 500) // turn off powerup
+    {
+        invincible = false;
+
+        // sBg.setTexture();
+        sship.setTexture(shiptexture);
+        normalSprite.setTexture(normaltexture);
+        dangerSprite.setTexture(dangertexture);
+        sdangerSprite.setTexture(sdangertexture);
+        repairSprite.setTexture(repairtexture);
+        invinciTimer = 0.f;
+        spawnTime = 12.f;
+    }
+
+    // level Up after every "pointsToLevelUp" points (upto level 3)
+    if (points - pointsAtLevelup >= pointsForLevelUp * level && level < 3 && health > 4)
+    {
+        pointsAtLevelup = points;
+        level++;
+        if (level == 2)
+            lvlPointsRect.setFillColor(sf::Color::Yellow);
+        else if (level == 3)
+            lvlPointsRect.setFillColor(sf::Color::Green);
+
+        initLevel(level);
+        window->draw(levelUpSprite);
+        window->display();
+        Sleep(2000);
+    }
+
+    // health
+    updateHealth(i);
+}
+
+void update()
+{
+
+    // first rain of ememies only
+    if (timer >= spawnTime && obsNo < 10)
+    {
+        timer = 0.f;
+        initObstacle(obsNo);
+
+        obsNo++;
+    }
+
+    // move
+    sship.move(dir, 0.f);
+
+    //restrict ship from moving outside the screen
+    if (sship.getPosition().x < 0)
+        sship.move(5.f, 0.f);
+    else if (sship.getPosition().x > windowWidth - sship.getTextureRect().width)
+        sship.move(-5.f, 0.f);
+
+    // update obstacles
+    for (int i = 0; i < 10; i++)
+    {
+        if (invincible == false)
+            obstacles[i].pos.y += obstacles[i].speed;
+        else
+            obstacles[i].pos.y += 15;
+
+        if (obstacles[i].pos.y > windowHeight && timer >= spawnTime)
         {
             timer = 0.f;
-            initObstacle(obsNo);
-
-            obsNo++;
+            initObstacle(i);
         }
 
-        //controling without spacebar:
-        // if (KeyTimer<=36.f)
-        // {
-        //     sship.move(dir, 0.f);
-        // }
-
-        //controling ship with spacebar:
-        if (sship.getPosition().x >= 0 && dir < 0.f)
-            sship.move(dir, 0.f);
-        else if (sship.getPosition().x < windowWidth - sship.getTextureRect().width && dir > 0.f)
-            sship.move(dir, 0.f);
-
-        //update obstacles
-        for (int i = 0; i < 10; i++)
-        {
-            obstacles[i].pos.y += obstacles[i].speed;
-            if (obstacles[i].pos.y > windowHeight && timer >= spawnTime)
-            {
-                timer = 0.f;
-                initObstacle(i);
-            }
-
-            //collision of ship and obstacle
-            if (obstacles[i].pos.y > windowHeight - sship.getTextureRect().height - obstacleRect.getSize().y && obstacles[i].pos.x > sship.getPosition().x - obstacles[i].size.x && obstacles[i].pos.x < sship.getPosition().x + sship.getTextureRect().width)
-            {
-                obstacles[i].pos.x = -100.f;
-
-                //gain more points at higher levels
-                points += (obstacles[i].points * level);
-
-                //powerUp when touch power object
-                if (invincible == false)
-                {
-                    if (obstacles[i].type == power)
-                    {
-                        invincible = true;
-                        invinciTimer = 0.f;
-                    }
-                    else if (invinciTimer >= 300)
-                    {
-                        invincible = false;
-                        invinciTimer = 0.f;
-                    }
-                }
-
-                //level Up after every "pointsToLevelUp" points (upto level 3)
-                if (points - pointsAtLevelup >= pointsForLevelUp * level && level < 3 && health > 4)
-                {
-                    pointsAtLevelup = points;
-                    level++;
-                    if (level == 2)
-                        lvlPointsRect.setFillColor(sf::Color::Yellow);
-                    else if (level == 3)
-                        lvlPointsRect.setFillColor(sf::Color::Green);
-
-                    initLevel(level);
-                    Sleep(2000);
-                }
-
-                //health
-                if (obstacles[i].health != 0)
-                {
-                    health += obstacles[i].health;
-
-                    //end health flash and reset color and points
-                    if (healthFlash == true && health > 4)
-                    {
-                        healthFlash = false;
-                        healthRect.setFillColor(sf::Color::Red);
-                        pointsRectY = windowHeight;
-                        if (points >= pointsForLevelUp / 2)
-                        {
-                            pointsAtLevelup = points - pointsForLevelUp / 2;
-                        }
-                    }
-                    else if (health < 5)
-                    {
-                        //decrease level when hit badly;
-                        if (level > 1)
-                        {
-                            level = 1;
-                            lvlPointsRect.setFillColor(sf::Color::White);
-                            pointsAtLevelup = points - 80;
-                            initLevel(level);
-                        }
-
-                        //Blink health bar when hit badly
-                        healthFlash = true;
-
-                        //endgame when health 0
-                        if (health < 1)
-                        {
-                            running = false;
-                            health = 0;
-
-                            ////////////////////////////////////////////////////////////////////////score
-                            std::cout << "Your score : " << points << std::endl;
-
-                            hs1.setScore(points);
-
-                            std::fstream file, fout;
-
-                            file.open("highscore.dat", std::ios::in | std::ios::binary);
-                            fout.open("temp", std::ios::out | std::ios::binary);
-
-                            bool inserted = false;
-                            for (int j = 0; j < 5; j++)
-                            {
-                                file.read((char *)&hs, sizeof(hs));
-
-                                if (hs1.score > hs.score && inserted == false)
-                                {
-                                    hs1.setName();
-                                    fout.write((char *)&hs1, sizeof(hs1));
-                                    fout.write((char *)&hs, sizeof(hs));
-                                    inserted = true;
-                                }
-                                else
-                                {
-                                    fout.write((char *)&hs, sizeof(hs));
-                                }
-                            }
-
-                            file.close();
-                            fout.close();
-
-                            remove("highscore.dat");
-                            rename("temp", "highscore.dat");
-
-                            file.open("highscore.dat", std::ios::in | std::ios::binary);
-                            std::cout << "Highscore list : " << std::endl;
-                            for (int j = 0; j < 5; j++)
-                            {
-                                file.read((char *)&hs, sizeof(hs));
-                                std::cout << "     " << j + 1 << ") " << hs.name << " : " << hs.score << std::endl;
-                            }
-                        }
-                    }
-                    //health limit
-                    else if (health > maxHealth)
-                        health = maxHealth;
-
-                    //update health bar expected position
-                    healthRectY = windowHeight - (health * windowHeight / maxHealth);
-                }
-            }
-        }
-
-        // if (firstpress==2)
-        //     loops += 1;
-        // else if (firstpress==3)
-        //     std::cout<<loops<<std::endl;
-
-        //text
-        std::stringstream ss;
-        ss << "Health : " << health << "\n"
-           << "Points : " << points << "\n";
-
-        uiText.setString(ss.str());
-
-        //time
-        timer += 1.f;
-        KeyTimer += 1.f;
-        if (healthFlash == true)
-            flashTimer += 1.f;
-        if (invincible == true)
-            invinciTimer += 1.f;
-        if (timer > 100.f)
-            timer = 0;
+        // collision of ship and obstacle
+        if (obstacles[i].pos.y > windowHeight - sship.getTextureRect().height - obstacles[i].size.y && obstacles[i].pos.x > sship.getPosition().x - obstacles[i].size.x && obstacles[i].pos.x < sship.getPosition().x + sship.getTextureRect().width)
+            upadateCollision(i);
     }
 
-    void render()
+    // text
+    std::stringstream ss;
+    ss << "Health : " << health << "\n"
+       << "Points : " << points << "\n";
+
+    uiText.setString(ss.str());
+
+    // time
+    timer += 1.f;
+    // KeyTimer += 1.f;
+    if (healthFlash == true)
+        flashTimer += 1.f;
+    if (invincible == true)
+        invinciTimer += 1.f;
+    if (timer > 100.f)
+        timer = 0;
+}
+
+void endgame()
+{
+    running = false;
+    health = 0;
+    sndEndgame.play(); // sound
+
+    ////////////////////////////////////////////////////////////////////////store score
+    std::cout << "Your score : " << points << std::endl;
+
+    hs1.setScore(points);
+
+    std::fstream file, fout;
+
+    file.open("highscore.dat", std::ios::in | std::ios::binary);
+    fout.open("temp", std::ios::out | std::ios::binary);
+
+    bool inserted = false;
+    for (int j = 0; j < 5; j++)
     {
-        window->clear(sf::Color::Black);
+        file.read((char *)&hs, sizeof(hs));
 
-        //obstacles
-        for (int i = 0; i < 10; i++)
+        if (hs1.score > hs.score && inserted == false)
         {
-            obstacleRect.setPosition(obstacles[i].pos);
-            obstacleRect.setSize(obstacles[i].size);
-            obstacleRect.setTexture(obstacles[i].tex);
-            obstacleRect.setFillColor(obstacles[i].color);
-            window->draw(obstacleRect);
+            hs1.setName();
+            fout.write((char *)&hs1, sizeof(hs1));
+            fout.write((char *)&hs, sizeof(hs));
+            j++;
+            inserted = true;
         }
-
-        // window->draw(sship);
-
-        //flash health when hit badly
-        if (healthFlash == true && flashTimer >= spawnTime)
+        else
         {
-            flashTimer = 0.f;
-            if (healthRect.getFillColor() == sf::Color::Red)
-                healthRect.setFillColor(sf::Color::Black);
-            else
-                healthRect.setFillColor(sf::Color::Red);
+            fout.write((char *)&hs, sizeof(hs));
         }
-        //update health bar
-        if (healthRectApproachY < healthRectY)
-            healthRectApproachY += 9.f;
-        else if (healthRectApproachY > healthRectY)
-            healthRectApproachY -= 8.f;
-        healthRect.setPosition(windowWidth, healthRectApproachY);
-
-        window->draw(healthRect);
-
-        //update points bar
-        if (healthFlash == false)
-        {
-            if (pointsRectY < windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
-                pointsRectY += 4.f;
-            else if (pointsRectY > windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
-                pointsRectY -= 1.f;
-            lvlPointsRect.setPosition(windowWidth + 20, pointsRectY);
-            window->draw(lvlPointsRect);
-        }
-
-        sship.setPosition(sship.getPosition().x, sship.getPosition().y);
-        window->draw(sship);
-        window->draw(normalSprite);
-
-        window->draw(uiText);
-        window->display();
     }
+
+    file.close();
+    fout.close();
+
+    remove("highscore.dat");
+    rename("temp", "highscore.dat");
+
+    file.open("highscore.dat", std::ios::in | std::ios::binary);
+    std::cout << "Highscore list : " << std::endl;
+    for (int j = 0; j < 5; j++)
+    {
+        file.read((char *)&hs, sizeof(hs));
+        std::cout << "     " << j + 1 << ") " << hs.name << " : " << hs.score << std::endl;
+    }
+}
+
+void render()
+{
+    window->clear(sf::Color::Black);
+
+    window->draw(sBg);
+
+    // obstacles
+    for (int i = 0; i < 10; i++)
+    {
+        if (obstacles[i].spr != NULL)
+        {
+            obstacles[i].spr->setPosition(obstacles[i].pos);
+            window->draw(*obstacles[i].spr);
+        }
+    }
+
+    // flash health when hit badly
+    if (healthFlash == true && flashTimer >= 12.f)
+    {
+        flashTimer = 0.f;
+        if (healthRect.getFillColor() == sf::Color::Red || healthRect.getFillColor() == sf::Color::Blue)
+            healthRect.setFillColor(sf::Color::Black);
+        else if (invincible == false)
+            healthRect.setFillColor(sf::Color::Red);
+        else
+            healthRect.setFillColor(sf::Color::Blue);
+    }
+
+    // update health bar
+    if (healthRectApproachY < healthRectY)
+        healthRectApproachY += 9.f;
+    else if (healthRectApproachY > healthRectY)
+        healthRectApproachY -= 8.f;
+    healthRect.setPosition(windowWidth, healthRectApproachY);
+
+    window->draw(healthRect);
+
+    // update points bar
+    if (healthFlash == false)
+    {
+        if (pointsRectY < windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
+            pointsRectY += 4.f;
+        else if (pointsRectY > windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
+            pointsRectY -= 1.f;
+        lvlPointsRect.setPosition(windowWidth + 20, pointsRectY);
+        window->draw(lvlPointsRect);
+    }
+
+    sship.setPosition(sship.getPosition().x, sship.getPosition().y);
+    window->draw(sship);
+    window->draw(normalSprite);
+
+    window->draw(uiText);
+    window->display();
+}
+
+
 };
 
 #endif
