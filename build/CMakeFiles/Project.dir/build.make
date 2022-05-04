@@ -73,15 +73,15 @@ CMakeFiles/Project.dir/src/main.cpp.obj: CMakeFiles/Project.dir/includes_CXX.rsp
 CMakeFiles/Project.dir/src/main.cpp.obj: ../src/main.cpp
 CMakeFiles/Project.dir/src/main.cpp.obj: CMakeFiles/Project.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\build\CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Project.dir/src/main.cpp.obj"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Project.dir/src/main.cpp.obj -MF CMakeFiles\Project.dir\src\main.cpp.obj.d -o CMakeFiles\Project.dir\src\main.cpp.obj -c "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Project.dir/src/main.cpp.obj -MF CMakeFiles\Project.dir\src\main.cpp.obj.d -o CMakeFiles\Project.dir\src\main.cpp.obj -c "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp"
 
 CMakeFiles/Project.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Project.dir/src/main.cpp.i"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp" > CMakeFiles\Project.dir\src\main.cpp.i
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp" > CMakeFiles\Project.dir\src\main.cpp.i
 
 CMakeFiles/Project.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Project.dir/src/main.cpp.s"
-	C:\msys64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp" -o CMakeFiles\Project.dir\src\main.cpp.s
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "C:\Users\newuser.LAPTOP-JVLU65UC\Documents\Rahul\Programmig\Git\Self practise\SpaceFlight\src\main.cpp" -o CMakeFiles\Project.dir\src\main.cpp.s
 
 # Object files for target Project
 Project_OBJECTS = \

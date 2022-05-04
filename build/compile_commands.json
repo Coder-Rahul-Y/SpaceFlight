@@ -1,7 +1,7 @@
 [
 {
   "directory": "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/build",
-  "command": "C:\\msys64\\mingw64\\bin\\g++.exe  @CMakeFiles/Project.dir/includes_CXX.rsp -g -std=gnu++2a -o CMakeFiles\\Project.dir\\src\\main.cpp.obj -c \"C:\\Users\\newuser.LAPTOP-JVLU65UC\\Documents\\Rahul\\Programmig\\Git\\Self practise\\SpaceFlight\\src\\main.cpp\"",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Project.dir/includes_CXX.rsp -g -std=gnu++1z -o CMakeFiles\\Project.dir\\src\\main.cpp.obj -c \"C:\\Users\\newuser.LAPTOP-JVLU65UC\\Documents\\Rahul\\Programmig\\Git\\Self practise\\SpaceFlight\\src\\main.cpp\"",
   "file": "C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/src/main.cpp"
 }
 ]
