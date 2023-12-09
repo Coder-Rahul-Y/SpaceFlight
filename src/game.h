@@ -76,9 +76,10 @@ public:
 class Game
 {
 private:
-    bool running = true, healthFlash = false, invincible = false, firstInitLevel = false, gravity = true;
+    float sizeFactor = 1.18;
+    bool running = true, healthFlash = false, invincible = false,powerUp=false, firstInitLevel = false, gravity = true;
     sf::RenderWindow *window;
-    int windowHeight = 600, windowWidth = 800;
+    int windowHeight = 600*sizeFactor, windowWidth = 800*sizeFactor;
     sf::Event ev;
     sf::RectangleShape healthRect, lvlPointsRect;
     sf::Vector2f ShipSize;
@@ -116,7 +117,6 @@ private:
 
     // audio
     sf::Music mus;
-    sf::Music::Span<sf::Time> musSpn;
     sf::SoundBuffer bufNormal, bufDanger, bufPower, bufHealth, bufEndgame, bufLvlUp;
     sf::Sound sndNormal, sndDanger, sndPower, sndHealth, sndEndgame, sndLvlUp;
 
@@ -139,23 +139,23 @@ private:
 
         // Normal
         if (probability < pNormal)
-            initObsFunc(num, normal, sNormal, 40.f, 40.f, 10, 0, &normalSprite);
+            initObsFunc(num, normal, sNormal, 40.f*sizeFactor, 40.f*sizeFactor, 10, 0, &normalSprite);
 
         // Repair
         else if (probability < pNormal + pRepair)
-            initObsFunc(num, repair, sRepair, 20.f, 20.f, 10, +5, &repairSprite);
+            initObsFunc(num, repair, sRepair, 20.f*sizeFactor, 20.f*sizeFactor, 10, +5, &repairSprite);
 
         // Danger
         else if (probability < pNormal + pRepair + pDanger)
-            initObsFunc(num, danger, sDanger, 30.f, 30.f, 0, -1, &dangerSprite);
+            initObsFunc(num, danger, sDanger, 30.f*sizeFactor, 30.f*sizeFactor, 0, -1, &dangerSprite);
 
         // Power
         else if (probability < pNormal + pRepair + pDanger + pPower)
-            initObsFunc(num, power, sPower, 25.f, 25.f, 0, 0, &powerSprite);
+            initObsFunc(num, power, sPower, 25.f*sizeFactor, 25.f*sizeFactor, 0, 0, &powerSprite);
 
         // super danger
         else if (probability < pNormal + pRepair + pDanger + pPower + pSuperDanger)
-            initObsFunc(num, superDanger, sSuperDanger, 50.f, 50.f, 0, -4, &sdangerSprite);
+            initObsFunc(num, superDanger, sSuperDanger, 50.f*sizeFactor, 50.f*sizeFactor, 0, -4, &sdangerSprite);
 
         obstacles[num].pos.x = rand() % int(windowWidth - obstacles[num].size.x);
         obstacles[num].pos.y = -obstacles[num].size.y;
@@ -214,20 +214,20 @@ private:
 public:
 Game()
     {
-        window = new sf::RenderWindow(sf::VideoMode(windowWidth + 20 + 10, windowHeight), "window", sf::Style::Titlebar | sf::Style::Close);
+        window = new sf::RenderWindow(sf::VideoMode(windowWidth + 20 *sizeFactor+ 10*sizeFactor, windowHeight), "window", sf::Style::Titlebar | sf::Style::Close);
         window->setFramerateLimit(80);
 
-        ShipSize.x = 50.f;
-        ShipSize.y = 50.f;
+        ShipSize.x = 50.f*sizeFactor;
+        ShipSize.y = 50.f*sizeFactor;
 
         sship.setPosition(ShipSize.x * 8, ShipSize.y * 11);
 
-        healthRect.setSize(sf::Vector2f(20.f, windowHeight));
+        healthRect.setSize(sf::Vector2f(20.f*sizeFactor, windowHeight));
         healthRect.setPosition(windowWidth, 0.f);
         healthRect.setFillColor(sf::Color::Red);
 
-        lvlPointsRect.setSize(sf::Vector2f(10.f, windowHeight));
-        lvlPointsRect.setPosition(windowWidth + 20, pointsRectY);
+        lvlPointsRect.setSize(sf::Vector2f(10.f*sizeFactor, windowHeight));
+        lvlPointsRect.setPosition(windowWidth + 20*sizeFactor, pointsRectY);
         lvlPointsRect.setFillColor(sf::Color::White);
 
         bgTexture1.loadFromFile("assets/background.png");
@@ -271,10 +271,7 @@ Game()
         // audio
         mus.openFromFile("assets/bg.wav");
         mus.setLoop(true);
-        musSpn.offset = sf::seconds(8.f); 
-        musSpn.length = sf::seconds(140.f); 
-        mus.setLoopPoints(musSpn);
-        mus.setPlayingOffset(sf::seconds(8.f));
+        // mus.setLoopPoints(0.f, mus.getDuration()));
         mus.play();
 
         bufDanger.loadFromFile("assets/bang.wav");
@@ -377,13 +374,13 @@ void input()
      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         // firstpress++;
-        if(!gravity) dir = -5.f;
-        else sship.move(-5.f, 0.f);
+        if(!gravity) dir = -5.f*sizeFactor;
+        else sship.move(-5.f*sizeFactor, 0.f*sizeFactor);
     }
      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        if (!gravity) dir = 5.f;
-        else sship.move(5.f, 0.f);
+        if (!gravity) dir = 5.f*sizeFactor;
+        else sship.move(5.f*sizeFactor, 0.f);
     }
      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
     {
@@ -441,9 +438,9 @@ void updateHealth(int i)
 
 void upadateCollision(int i)
 {
-    obstacles[i].pos.x = -100.f;
+    obstacles[i].pos.x = -100.f*sizeFactor;
 
-    if (invincible == true)
+    if (powerUp == true)
     {
         points += 20;
         sndNormal.play();
@@ -460,6 +457,7 @@ void upadateCollision(int i)
     {
         sndPower.play();
         invincible = true;
+        powerUp = true;
         invinciTimer = 0.f;
         spawnTime = 0.f;
 
@@ -469,9 +467,9 @@ void upadateCollision(int i)
         sdangerSprite.setTexture(sdangertexture1);
         repairSprite.setTexture(repairtexture1);
     }
-    if (invincible == true && invinciTimer >= 500) // turn off powerup
+    if ((powerUp == true && invinciTimer >= 500) || (invincible==true && invinciTimer>=700)) // turn off powerup
     {
-        invincible = false;
+        powerUp = false;
 
         // sBg.setTexture();
         sship.setTexture(shiptexture);
@@ -479,7 +477,11 @@ void upadateCollision(int i)
         dangerSprite.setTexture(dangertexture);
         sdangerSprite.setTexture(sdangertexture);
         repairSprite.setTexture(repairtexture);
-        invinciTimer = 0.f;
+        if (invinciTimer>=700)
+        {
+            invincible=false;
+            invinciTimer = 0.f;
+        }
         spawnTime = 12.f;
     }
 
@@ -520,17 +522,17 @@ void update()
 
     //restrict ship from moving outside the screen
     if (sship.getPosition().x < 0)
-        sship.move(5.f, 0.f);
+        sship.move(5.f*sizeFactor, 0.f);
     else if (sship.getPosition().x > windowWidth - sship.getTextureRect().width)
-        sship.move(-5.f, 0.f);
+        sship.move(-5.f*sizeFactor, 0.f);
 
     // update obstacles
     for (int i = 0; i < 10; i++)
     {
-        if (invincible == false)
+        if (powerUp == false)
             obstacles[i].pos.y += obstacles[i].speed;
         else
-            obstacles[i].pos.y += 15;
+            obstacles[i].pos.y += 15*sizeFactor;
 
         if (obstacles[i].pos.y > windowHeight && timer >= spawnTime)
         {
@@ -652,10 +654,10 @@ void render()
     if (healthFlash == false)
     {
         if (pointsRectY < windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
-            pointsRectY += 4.f;
+            pointsRectY += 4.f*sizeFactor;
         else if (pointsRectY > windowHeight - ((points - pointsAtLevelup) * windowHeight / (pointsForLevelUp * level)))
-            pointsRectY -= 1.f;
-        lvlPointsRect.setPosition(windowWidth + 20, pointsRectY);
+            pointsRectY -= 1.f*sizeFactor;
+        lvlPointsRect.setPosition(windowWidth + 20*sizeFactor, pointsRectY);
         window->draw(lvlPointsRect);
     }
 

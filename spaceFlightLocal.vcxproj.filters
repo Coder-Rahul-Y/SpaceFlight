@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\game copy stable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\asteroid-clipart-animated-8.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\background.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\background1.jfif" />
+    <Image Include="assets\danger.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\danger1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\health.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\health1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\levelUP.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\normal1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\OIP (2).png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\power.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Sdanger.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Sdanger1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Sdanger2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\Sdangersdf.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\ship.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\ship1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\ship3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\bang.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\boost1.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\boost2.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\healh flash.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\health.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\littleBlast.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\point.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\power.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="assets\Sbang.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\boost.flac" />
+    <None Include="src\highscore.dat" />
+    <None Include="fileIO.exe" />
+    <None Include="output.test" />
+    <None Include="openal32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\SIXTY.TTF" />
+    <Font Include="assets\fonts\slant_regular.ttf" />
+    <Font Include="assets\fonts\stocky.ttf" />
+  </ItemGroup>
+</Project>
