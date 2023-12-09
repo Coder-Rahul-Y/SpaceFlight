@@ -1,3 +1,0 @@
-C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/build/CMakeFiles/Project.dir
-C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/build/CMakeFiles/edit_cache.dir
-C:/Users/newuser.LAPTOP-JVLU65UC/Documents/Rahul/Programmig/Git/Self practise/SpaceFlight/build/CMakeFiles/rebuild_cache.dir
