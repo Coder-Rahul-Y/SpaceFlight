@@ -191,9 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\boost.flac" />
-    <None Include="fileIO.exe" />
     <None Include="openal32.dll" />
-    <None Include="output.test" />
     <None Include="src\highscore.dat" />
   </ItemGroup>
   <ItemGroup>
