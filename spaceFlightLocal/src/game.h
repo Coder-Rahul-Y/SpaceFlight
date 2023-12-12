@@ -278,7 +278,7 @@ Game()
         bufNormal.loadFromFile("assets/point.wav");
         bufPower.loadFromFile("assets/boost.flac");
         bufHealth.loadFromFile("assets/power.wav");
-        bufEndgame.loadFromFile("assets/health flash.wav");
+        bufEndgame.loadFromFile("assets/healthFlash.wav");
         bufLvlUp.loadFromFile("assets/bang.wav");
 
         sndNormal.setBuffer(bufNormal);
@@ -664,7 +664,6 @@ void render()
     sship.setPosition(sship.getPosition().x, sship.getPosition().y);
     window->draw(sship);
     window->draw(normalSprite);
-
     window->draw(uiText);
     window->display();
 }
