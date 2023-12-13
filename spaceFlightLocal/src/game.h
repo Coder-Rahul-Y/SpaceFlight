@@ -422,7 +422,11 @@ void updateHealth(int i)
         }
 
         // Blink health bar when hit badly
-        healthFlash = true;
+        if (healthFlash == false)
+        {
+            healthFlash = true;
+            sndEndgame.play(); // sounds
+        }
 
         // endgame when health 0
         if (health < 1)
